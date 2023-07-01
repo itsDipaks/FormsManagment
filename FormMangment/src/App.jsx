@@ -1,4 +1,5 @@
 
+import { Badge } from '@mui/material'
 import './App.css'
 import Header from './Components/Header'
 import CombineRoutes from './Routes/CombineRoutes'
@@ -9,6 +10,7 @@ function App() {
     <>
     <Header/>
    <CombineRoutes/>
+ 
     </>
   )
 }
