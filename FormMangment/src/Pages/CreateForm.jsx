@@ -1,5 +1,10 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./forms.css";
+
+import {useNavigate, useParams} from "react-router-dom";
+import axios from "axios";
+import {Backendurl} from "../assets/Urls";
+import {useSelector} from "react-redux";
 import {
   Accordion,
   AccordionDetails,
@@ -16,32 +21,28 @@ import {
 } from "@mui/material";
 import {
   AddCircleOutline,
-  BroadcastOnPersonalSharp,
   CheckBox,
   Close,
-  CropOriginal,
   DeleteForever,
-  FilterNone,
   FlipCameraIos,
-  OndemandVideo,
   Radio,
   ShortText,
   ShortTextOutlined,
-  Subject,
   SubjectOutlined,
 } from "@mui/icons-material";
-
+import Swal from "sweetalert2";
 const CreateForm = () => {
-  const [question, setquestion] = useState([
+  let [formtitle, setformtitle] = useState();
+  let [formdesc, setformdesc] = useState();
+  const param = useParams();
+  let {token} = useSelector((Store) => Store.Auth);
+let navigate=useNavigate()
+  // ======================
+  const [questions, setQuestions] = useState([
     {
-      questionText: "Which Framework is the best?",
+      questionText: " ",
       questionType: "radio",
-      options: [
-        {optionText: "react"},
-        {optionText: "angular"},
-        {optionText: "vue"},
-        {optionText: "nextjs"},
-      ],
+      options: [{optionText: ""}],
       answer: false,
       answerkey: "",
       points: 0,
@@ -50,60 +51,81 @@ const CreateForm = () => {
     },
   ]);
 
+  let Addform = async (e) => {
+    e.preventDefault();
+    let addformdata = await axios.post(
+      `${Backendurl}/form/addnewform`,
+      {
+        form_id: param.id,
+        formtitle: formtitle,
+        formdesc: formdesc,
+        questions: questions,
+      },
+      {headers: {token: token}}
+    );
+
+if(addformdata.data.msg="done"){
+  Swal.fire("Sucessfull !", "Form Added Sucessfully !", "success");
+
+  navigate("/")
+}
+
+    console.log(addformdata);
+  };
+
   let ChangeQuestion = (text, i) => {
-    var newQuestion = [...question];
+    var newQuestion = [...questions];
     newQuestion[i].questionText = text;
-    setquestion(newQuestion);
-    console.log(newQuestion);
+    setQuestions(newQuestion);
   };
 
   let changeOptionValue = (text, i, j) => {
-    var optionsQuestion = [...question];
+    var optionsQuestion = [...questions];
     optionsQuestion[i].options[j].optionText = text;
-    setquestion(optionsQuestion);
+    setQuestions(optionsQuestion);
   };
 
   let addQuestiontype = (i, type) => {
-    let qs = [...question];
+    let qs = [...questions];
     qs[i].questionType = type;
-    setquestion(qs);
+    setQuestions(qs);
   };
 
   let removeOption = (i, j) => {
-    var removeOptionqs = [...question];
+    var removeOptionqs = [...questions];
     if (removeOptionqs[i].options.length > 1) {
       removeOptionqs[i].options.splice(j, 1);
-      setquestion(removeOptionqs);
+      setQuestions(removeOptionqs);
     }
   };
 
   let addoption = (i) => {
-    var optionsOfQuestion = [...question];
+    var optionsOfQuestion = [...questions];
     if (optionsOfQuestion[i].options.length < 5) {
       optionsOfQuestion[i].options.push({
         optionText: "Option" + (optionsOfQuestion[i].options.length + 1),
       });
     } else {
     }
-    setquestion(optionsOfQuestion);
+    setQuestions(optionsOfQuestion);
   };
 
   let Deletequestion = (i) => {
-    let qs = [...question];
-    if (question.length > 1) {
+    let qs = [...questions];
+    if (questions.length > 1) {
       qs.splice(i, 1);
     }
-    setquestion(qs);
+    setQuestions(qs);
   };
 
   let requirdQuestion = (i) => {
-    var reqQuestion = [...question];
-    reqQuestion[I].required = !reqQuestion[i].required;
-    setquestion(reqQuestion);
+    var reqQuestion = [...questions];
+    reqQuestion[i].required = !reqQuestion[i].required;
+    setQuestions(reqQuestion);
   };
   let addnewQuestionfield = () => {
-    setquestion([
-      ...question,
+    setQuestions([
+      ...questions,
       {
         questionText: "Question",
         questionType: "radio",
@@ -115,32 +137,31 @@ const CreateForm = () => {
   };
 
   let setOptionAnswer = (ans, qno) => {
-    var questionS = [...question];
+    var questionS = [...questions];
     questionS[qno].answerkey = ans;
-    setquestion(questionS);
-    console.log(ans)
+    setQuestions(questionS);
+    // console.log(ans)
   };
 
   let setOptionPoints = (points, qno) => {
-    var questionS = [...question];
+    var questionS = [...questions];
     questionS[qno].points = points;
-    setquestion(questionS);
+    setQuestions(questionS);
   };
 
   let AddAnswer = (i) => {
-    let answerOfQuestion = [...question];
+    let answerOfQuestion = [...questions];
     answerOfQuestion[i].answer = !answerOfQuestion[i].answer;
-    setquestion(answerOfQuestion);
-
+    setQuestions(answerOfQuestion);
   };
   let DoneAnswer = (i) => {
-    let answerOfQuestion = [...question];
+    let answerOfQuestion = [...questions];
     answerOfQuestion[i].answer = !answerOfQuestion[i].answer;
-    setquestion(answerOfQuestion);
+    setQuestions(answerOfQuestion);
   };
 
-  function QuestionsUi() {
-    return question.map((el, i) => (
+  let formui = () => {
+    return questions.map((el, i) => (
       <Accordion expanded={el.open} className={el[i]?.open ? "add_border" : ""}>
         <AccordionSummary
           aria-controls="panel1a-content"
@@ -148,7 +169,7 @@ const CreateForm = () => {
           elevation={1}
           style={{width: "100%"}}
         >
-          {question[i].open ? (
+          {questions[i]?.open ? (
             <div className="saved_questions">
               <Typography
                 style={{
@@ -159,7 +180,7 @@ const CreateForm = () => {
                   paddingBottom: "8px",
                 }}
               >
-                {i + 1}. {question[i].questionText}
+                {i + 1}. {questions[i].questionText}
               </Typography>
               {el.options.map((op, j) => (
                 <div key={j}>
@@ -196,18 +217,18 @@ const CreateForm = () => {
           ) : null}
         </AccordionSummary>
         <div className="question_boxes">
-          {!question[i].answer ? (
+          {!questions[i].answer ? (
             <AccordionDetails className="add_question">
               <div className="add_question_top">
                 <input
                   type="text"
                   className="question"
-                  placeholder="Question"
-                  value={el.questionText}
+                  placeholder="Enter Question Here."
+                   
                   onChange={(e) => ChangeQuestion(e.target.value, i)}
                 />
-              
-                <Select className="select" style={{fontSize: "13px"}}>
+
+                <Select className="select" style={{fontSize: "13px" ,width:"20%"}}>
                   <MenuItem
                     id="text"
                     value="Text"
@@ -263,7 +284,6 @@ const CreateForm = () => {
                     />
                   </div>
 
-                  
                   <IconButton aria-label="delete">
                     <Close
                       onClick={() => {
@@ -286,6 +306,7 @@ const CreateForm = () => {
                           inputProps={{"aria-lable": "secondary checkbox"}}
                           style={{marginLeft: "10px", marginRight: "10px"}}
                           disabled
+                        
                         />
                       ) : (
                         <ShortTextOutlined style={{marginRight: "10px"}} />
@@ -371,6 +392,7 @@ const CreateForm = () => {
                   value={el.questionText}
                   onChange={(e) => ChangeQuestion(e.target.value, i)}
                   disabled
+                  required={true}
                 />
 
                 <input
@@ -378,6 +400,7 @@ const CreateForm = () => {
                   className="points"
                   min="0"
                   step="1"
+                  required={true}
                   placeholder="0"
                   onChange={(e) => setOptionPoints(e.target.value, i)}
                 />
@@ -462,36 +485,45 @@ const CreateForm = () => {
 
           <div className="question_edit">
             <AddCircleOutline className="edit" onClick={addnewQuestionfield} />
-            
           </div>
         </div>
       </Accordion>
     ));
-  }
+  };
 
   return (
     <div>
       <div className="question_form">
         <br />
         <br />
-        <div className="section">
-          <div className="question_title_section">
-            <div className="question_form_top">
-              <input
-                type="text"
-                className="q_form_top_name"
-                placeholder="Untitled Document"
-              />
-              <input
-                type="text"
-                className="q_form_top_desc"
-                placeholder="Form Description"
-              />
+        <form onSubmit={(e) => Addform(e)}>
+          <div className="section">
+            <div className="question_title_section">
+              <div className="question_form_top">
+                <input
+                  type="text"
+                  className="q_form_top_name"
+                  placeholder="Untitled Document"
+                  // defaultValue={formdata?.formtitle}
+                  onChange={(e) => {
+                    setformtitle(e.target.value);
+                  }}
+                />
+                <input
+                  type="text"
+                  className="q_form_top_desc"
+                  placeholder="Form Description"
+                  onChange={(e) => {
+                    setformdesc(e.target.value);
+                  }}
+                  // defaultValue={formdata?.formdesc}
+                />
+              </div>
             </div>
+            {formui()}
+          <button className="btn-primary m-4 bg-indigo-400 hover:bg-indigo-600 text-white border p-2 text-center" type="submit">Save Form</button>
           </div>
-
-          {QuestionsUi()}
-        </div>
+        </form>
       </div>
     </div>
   );

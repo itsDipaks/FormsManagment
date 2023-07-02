@@ -17,6 +17,7 @@ FormRouter.post("/generateform", Authenticate,async(req,res)=>{
             
             ],
             answer: false,
+            points:0,
             answerkey: "",
             open: true,
             required: false,
@@ -46,6 +47,30 @@ FormRouter.get('/userforms', Authenticate,async (req, res) => {
       res.json(user);
     } catch (error) {
     //   console.error(error);/
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+
+
+  FormRouter.post('/addnewform', Authenticate, async (req, res) => {
+    try {
+      const user = new FormModel( {...req.body});
+      await user.save()
+      res.json({msg:"done",user});
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  })
+  
+
+FormRouter.get('/:id', Authenticate,async (req, res) => {
+    console.log(req.body)
+    try {
+      const Singleform = await FormModel.findOne({form_id:req.params.id});
+      res.json(Singleform);
+    } catch (error) {
+      console.error(error)
       res.status(500).json({ error: 'Server error' });
     }
   });

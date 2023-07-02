@@ -1,4 +1,0 @@
-export let SET_QUESTIONS="SET_QUESTIONS"
-export let CHANGE_TYPE="CHANGE_TYPE"
-export let SET_DOC_NAME="SET_DOC_NAME"
-export let SET_DOC_DESC="SET_DOC_DESC"

@@ -3,22 +3,15 @@ import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {Backendurl} from "../assets/Urls";
 import {useSelector} from "react-redux";
-import formlogo from "../assets/Weblogo.png"
+import formlogo from "../assets/Weblogo.png";
+import {v4 as uuidv4} from "uuid";
 const Home = () => {
   let navigate = useNavigate();
   let [forms, setforms] = useState([]);
   let {token} = useSelector((Store) => Store.Auth);
   const GenerateForm = async () => {
     try {
-      let Form = await axios.post(
-        `${Backendurl}/form/generateform`,
-        {},
-        {headers: {token: token}}
-      );
-      console.log(Form);
-      if (Form.data.newForm_id) {
-        navigate(`/${Form.data.newForm_id}`);
-      }
+      navigate(`/${uuidv4()}`);
     } catch (err) {
       alert("Something Wents Wrong");
     }
@@ -69,26 +62,23 @@ const Home = () => {
       </div>
 
       <section className="  w-11/12 m-auto mt-12">
-       
         <div className="grid grid-cols-1 grid-flow-row gap-2 md:grid-cols-4">
           {forms &&
-            forms?.map((el,i) => (
-              <Link to={`/${el?._id}`}
+            forms?.map((el, i) => (
+              <Link
+                to={`/form/${el?.form_id}`}
                 href="#"
-                style={{alignItems:"center"}}
+                style={{alignItems: "center"}}
                 className=" max-w-sm p-4 flex flex-col justify-center  bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100  "
               >
+                <img src={formlogo} className="w-20 m-auto  p-2" alt="" />
 
-<img src={formlogo} className="w-20 m-auto  p-2" alt="" />
-<div>
-<h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900  ">
-              { el?.formtitle} <span>{i+1}</span>
-                </h5>
-                <p className="font-normal text-gray-700  ">
-                {el?.formdesc}
-                </p>
-</div>
-                
+                <div>
+                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-center text-gray-900  ">
+                    {el?.formtitle}
+                  </h5>
+                  <p className="font-normal text-gray-700  ">{el?.formdesc}</p>
+                </div>
               </Link>
             ))}
         </div>

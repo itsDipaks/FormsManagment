@@ -1,6 +1,13 @@
 import React from 'react'
 import logo from "../assets/Weblogo.png"
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 const Header = () => {
+    let isauth=localStorage.getItem("token")
+let navigate=useNavigate()
+    let Logout=()=>{
+        localStorage.removeItem("token")
+        navigate("/login")
+    }
   return (
     <div>
         
@@ -12,8 +19,9 @@ const Header = () => {
             <span class="self-center text-2xl font-semibold whitespace-nowrap  ">MyForms</span>
         </a>
         <div class="flex items-center">
-            <a href="tel:5541251234" class="mr-6 text-sm  text-gray-500   hover:underline">Dipak Pawar</a>
-            <a href="#" class="text-sm  text-blue-600   hover:underline">Login</a>
+            <p   class="mr-6 text-sm  text-gray-500   hover:underline">Dipak Pawar</p>
+           { isauth?<p  class="text-sm  text-blue-600 cursor-pointer   hover:underline" onClick={()=>Logout()}> Logout </p>: <p  class="text-sm  text-blue-600 cursor-pointer   hover:underline"onClick={()=>{Navigate("/login")}} > Login</p>}
+          {/* { <Link to={"/login"}>Login</Link>} */}
         </div>
     </div>
 </nav>
@@ -22,12 +30,9 @@ const Header = () => {
         <div class="flex items-center justify-center">
             <ul class="flex flex-row font-medium mt-0 mr-6 space-x-8 text-sm">
                 <li>
-                    <a href="#" class="text-gray-900   hover:underline" aria-current="page">Home</a>
+                    <Link to={"/"} href="#" class="text-gray-900   hover:underline" aria-current="page">Home</Link>
                 </li>
-                
-                <li>
-                    <a href="#" class="text-gray-900   hover:underline">Form</a>
-                </li>
+              
             </ul>
         </div>
     </div>

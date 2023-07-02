@@ -23,6 +23,7 @@ export const AuthReducer = (state = initialstate, {type, payload}) => {
     case AUTH_GET_SUCESS: {
       if (payload.data.token) {
         localStorage.setItem("token", JSON.stringify(payload?.data?.token));
+        localStorage.setItem("islogin", JSON.stringify(true));
       }
       return {
         ...state,

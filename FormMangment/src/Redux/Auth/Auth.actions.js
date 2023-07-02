@@ -34,10 +34,23 @@ export let userLogin = (loginformdata) => async (dispatch) => {
   dispatch({type: AUTH_GET_LOADING});
   try {
     let loginCred = await axios.post(`${Backendurl}/auth/login`, loginformdata);
-    console.log(loginCred)
-    
-    dispatch({type: AUTH_GET_SUCESS, payload: loginCred});
-    Swal.fire("Welcome Back !", "Login success !", "success");
+  
+    if(loginCred.data.msg=="NotFound"){
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Faild !User Not Found Please signup !",
+      });
+    }else if(loginCred.data.msg=="Sucessfully"){
+      Swal.fire("Welcome Back !", "Login success !", "success");
+      dispatch({type: AUTH_GET_SUCESS, payload: loginCred});
+    }else{
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Faild !Something Wents Wrong please try again  !",
+      });
+    }
   } catch (err) {
     dispatch({type: AUTH_GET_ERROR});
     Swal.fire({
