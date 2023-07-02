@@ -12,7 +12,7 @@ const CombineRoutes = () => {
             <Route path='/signup' element={<Signup/>}/>
             <Route path='/login' element={<Login/>}/>
             <Route path='/' element={<Home/>}/>
-            <Route path='/newform' element={<CreateForm/>}/>
+            <Route path='/:id' element={<CreateForm/>}/>
         </Routes>
     </>
   )

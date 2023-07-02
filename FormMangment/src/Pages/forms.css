@@ -150,5 +150,5 @@ outline: none;
     width: 35px;
 }
 .edit{
-    padding: 8px 5px;
+    cursor: pointer;
 }

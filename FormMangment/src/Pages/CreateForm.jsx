@@ -206,7 +206,7 @@ const CreateForm = () => {
                   value={el.questionText}
                   onChange={(e) => ChangeQuestion(e.target.value, i)}
                 />
-                <CropOriginal />
+              
                 <Select className="select" style={{fontSize: "13px"}}>
                   <MenuItem
                     id="text"
@@ -263,7 +263,7 @@ const CreateForm = () => {
                     />
                   </div>
 
-                  <CropOriginal />
+                  
                   <IconButton aria-label="delete">
                     <Close
                       onClick={() => {
@@ -462,9 +462,7 @@ const CreateForm = () => {
 
           <div className="question_edit">
             <AddCircleOutline className="edit" onClick={addnewQuestionfield} />
-            <OndemandVideo className="edit" />
-            <CropOriginal className="edit" />
-            <TextField className="edit" />
+            
           </div>
         </div>
       </Accordion>
