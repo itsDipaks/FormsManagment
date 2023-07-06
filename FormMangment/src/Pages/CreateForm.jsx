@@ -240,6 +240,26 @@ if(addformdata.data.msg="done"){
                     /> Paragraph{" "}
                   </MenuItem>
                   <MenuItem
+                    id="number"
+                    value="Number"
+                    onClick={() => addQuestiontype(i, "number")}
+                  >
+                    {" "}
+                    <SubjectOutlined
+                      style={{marginRight: "10px"}}
+                    /> Number{" "}
+                  </MenuItem>
+                  <MenuItem
+                    id="date"
+                    value="Date"
+                    onClick={() => addQuestiontype(i, "date")}
+                  >
+                    {" "}
+                    <SubjectOutlined
+                      style={{marginRight: "10px"}}
+                    /> Date{" "}
+                  </MenuItem>
+                  <MenuItem
                     id="chekbox"
                     value="Checkbox"
                     onClick={() => addQuestiontype(i, "checkbox")}
@@ -274,7 +294,7 @@ if(addformdata.data.msg="done"){
 
                   <div>
                     <input
-                      type="text"
+                         type={el.questionType}
                       className="text_input"
                       placeholder="optios"
                       value={el.options[j].optionText}

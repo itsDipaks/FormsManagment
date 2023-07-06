@@ -8,6 +8,8 @@ const DisplayForm = () => {
   const [form, setformdata] = useState();
 
   let param = useParams();
+let loading=true
+
 
   let {token} = useSelector((Store) => Store.Auth);
 

@@ -1,1 +1,1 @@
-export const Backendurl="http://localhost:8100"
+export const Backendurl="https://black-cuttlefish-yoke.cyclic.app"
