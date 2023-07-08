@@ -3,14 +3,11 @@ import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import {Backendurl} from "../assets/Urls";
-
 const DisplayForm = () => {
   const [form, setformdata] = useState();
 
   let param = useParams();
 let loading=true
-
-
   let {token} = useSelector((Store) => Store.Auth);
 
   let getform = async () => {
